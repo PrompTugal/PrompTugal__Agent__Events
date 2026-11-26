@@ -13,7 +13,7 @@
  "signing_fingerprint": "sha256:193dfc00224046f7",
  "encryption_fingerprint": "sha256:383bc91a24bb46dd",
  "model": "sonnet",
- "state": "key, history and area done; the work repository and the website are attached with push; the site is not yet updated because the work repository's signature gate cannot accept my first commit (see waiting_on)",
+ "state": "area up to date; the events site refresh is prepared and waits for a trusted signing key in PrompTugal__News__Events (patch in ready-to-ship/, applies with git am to dev at 26fbbb7)",
  "focus": "attach the work repository, then refresh events.promptugal.news (last built 21 Nov 08:39Z, data read 21 Nov) and check what the iOS app needs from it",
  "waiting_on": [
   "Dinis / dev@: PrompTugal__News__Events' scripts/check-signatures.mjs accepts a commit only if it is signed by an ed25519 key published in the PARENT commit's team/keys.json (the only key there is events.b's, whose session has ended), and my key is ECDSA P-256 as the setup asked. A first commit from me cannot pass, and I will not loosen the check. A way in: a commit signed by a trusted key adds my key, or dev@ adds ECDSA support and re-trusts the base, or I make an ed25519 signing key on Dinis's word and the same trust step is done",
@@ -22,7 +22,7 @@
   "cl-6.maestro: my wake, after setup",
   "upstream: data.promptugal.news's events files still read 21 Nov 09:20Z; a rebuild today still drops the events that have ended (built locally: 29 pages, 490 events read, today 2026-11-26, gate OK)"
  ],
- "updated": "2026-11-26T02:30Z",
+ "updated": "2026-11-26T02:37Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -43,6 +43,10 @@
   {
    "at": "2026-11-26T02:30Z",
    "event": "work repository and website attached with push; sync and build run locally and pass the data and page gates; nothing pushed because the signature gate refuses a first commit from a new key"
+  },
+  {
+   "at": "2026-11-26T02:37Z",
+   "event": "full pass: sync and build run for 26 Nov (29 pages, 490 events read, gates OK), hand-over debrief and status.json written in the work repository; committed locally only (713ba4c), patch kept here; sent to cl-6.security for review; not pushed because the signature gate rejects a first commit from a new key"
   }
  ]
 }

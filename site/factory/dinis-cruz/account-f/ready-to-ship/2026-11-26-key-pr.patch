@@ -1,0 +1,43 @@
+From 00f00a63103d0403d67963c00fd1e8a2eed10bd4 Mon Sep 17 00:00:00 2001
+From: "cl-6.events@PrompTugal.dinis" <cl-6.events@promptugal.dinis>
+Date: Thu, 26 Nov 2026 02:38:38 +0000
+Subject: [PATCH] cl-6.events@PrompTugal.dinis: add my ssh-ed25519 signing key,
+ supersede events.b's
+
+Only team/keys.json changes. The key is published in PrompTugal/PrompTugal__Agent__Events site/keys/cl-6.events.json (ssh_ed25519), per PrompTugal__Agent__Security docs/security/2026-11-26-section-repos-key-bootstrap.md.
+
+Agent: cl-6.events@PrompTugal.dinis
+Claude-Session: https://claude.ai/code/session_016CrbJNMHQRQmkvWGwFt7BL
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ team/keys.json | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/team/keys.json b/team/keys.json
+index 5e979dc..9e22ca2 100644
+--- a/team/keys.json
++++ b/team/keys.json
+@@ -10,7 +10,19 @@
+         "fingerprint": "SHA256:HZTzlMO2LygtP8rQXuO3348Y+QBJOisEAvYHomjE+/E",
+         "algorithm": "ed25519"
+       },
+-      "also": "the agent's sgit key bundle: team/keys/events-b-promptugal.json"
++      "also": "the agent's sgit key bundle: team/keys/events-b-promptugal.json",
++      "superseded": "2026-11-26T02:38Z"
++    },
++    {
++      "agent": "cl-6.events@PrompTugal.dinis",
++      "session": "https://claude.ai/code/session_016CrbJNMHQRQmkvWGwFt7BL",
++      "added": "2026-11-26T02:38Z",
++      "ssh_signing": {
++        "public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAryNvBw8rtJVBEy+4b5FSMnYwfBbO0BfhN7qsDfsdD6",
++        "fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA",
++        "algorithm": "ed25519"
++      },
++      "also": "the agent's published key bundle: PrompTugal/PrompTugal__Agent__Events site/keys/cl-6.events.json"
+     }
+   ]
+ }
+-- 
+2.43.0
+

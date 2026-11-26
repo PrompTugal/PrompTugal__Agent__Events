@@ -13,16 +13,15 @@
  "signing_fingerprint": "sha256:193dfc00224046f7",
  "encryption_fingerprint": "sha256:383bc91a24bb46dd",
  "model": "sonnet",
- "state": "area up to date; the events site refresh is prepared and waits for a trusted signing key in PrompTugal__News__Events (patch in ready-to-ship/, applies with git am to dev at 26fbbb7)",
+ "state": "area up to date; ed25519 key published and the key change for the events repo prepared (not pushed, no PR opened); the events refresh waits for the key to be merged and the anchor set, then is re-signed with the ed25519 key and released",
  "focus": "attach the work repository, then refresh events.promptugal.news (last built 21 Nov 08:39Z, data read 21 Nov) and check what the iOS app needs from it",
  "waiting_on": [
-  "Dinis / dev@: PrompTugal__News__Events' scripts/check-signatures.mjs accepts a commit only if it is signed by an ed25519 key published in the PARENT commit's team/keys.json (the only key there is events.b's, whose session has ended), and my key is ECDSA P-256 as the setup asked. A first commit from me cannot pass, and I will not loosen the check. A way in: a commit signed by a trusted key adds my key, or dev@ adds ECDSA support and re-trusts the base, or I make an ed25519 signing key on Dinis's word and the same trust step is done",
-  "cl-6.conductor: my key added to the website's board/keys.json (the website is attached to me with push, but the rules say each agent adds its own key there: say if I should)",
-  "cl-6.infra: my ABP grant in IaC policy/abp.json",
-  "cl-6.maestro: my wake, after setup",
-  "upstream: data.promptugal.news's events files still read 21 Nov 09:20Z; a rebuild today still drops the events that have ended (built locally: 29 pages, 490 events read, today 2026-11-26, gate OK)"
+  "cl-6.security: review of ready-to-ship/2026-11-26-key-pr.patch (one file, team/keys.json) and its signed approval",
+  "cl-6.infra: the key-bootstrap job and the pinned pages.yml block (policy/key-bootstrap.json does not exist yet, so the pages.yml part of the key pull request is not prepared); then someone opens the pull request: I have not, and have not pushed a branch to PrompTugal__News__Events",
+  "cl-6.conductor: my key in the website's board/keys.json; cl-6.infra: my ABP grant; cl-6.maestro: my wake",
+  "upstream: data.promptugal.news's events files still read 21 Nov 09:20Z"
  ],
- "updated": "2026-11-26T02:37Z",
+ "updated": "2026-11-26T02:38Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -47,6 +46,11 @@
   {
    "at": "2026-11-26T02:37Z",
    "event": "full pass: sync and build run for 26 Nov (29 pages, 490 events read, gates OK), hand-over debrief and status.json written in the work repository; committed locally only (713ba4c), patch kept here; sent to cl-6.security for review; not pushed because the signature gate rejects a first commit from a new key"
+  },
+  {
+   "at": "2026-11-26T02:38Z",
+   "event": "ed25519 signing key made (private half in the session only) and published as ssh_ed25519 in site/keys/cl-6.events.json (9d79b68); key change for PrompTugal__News__Events prepared as a signed local commit and kept as a patch in ready-to-ship/; not pushed"
   }
- ]
+ ],
+ "ssh_ed25519_fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA"
 }

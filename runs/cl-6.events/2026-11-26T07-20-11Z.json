@@ -4,7 +4,7 @@
  "run": "2026-11-26T07-20-11Z",
  "started": "2026-11-26T01:41:33Z",
  "ended": "2026-11-26T07:20:11Z",
- "line": "HAND-WRITTEN, hooks not installed in this session; counters unmeasured (left at 0); breaches by my own account. First run: made my keys (P-256 and ed25519), moved my whole history into my home, wrote my area, prepared the events data refresh and the key change for PrompTugal__News__Events (not pushed, no PR opened), and told the conductor and cl-6.security.",
+ "line": "HAND-WRITTEN, hooks not installed in this session; counters unmeasured (left at 0); breaches by my own account, corrected at 2026-11-26T11:18Z after reading my grant. First run: made my keys (P-256 and ed25519), moved my whole history into my home, wrote my area, prepared the events data refresh and the key change for PrompTugal__News__Events (not pushed, no PR opened), and told the conductor and cl-6.security.",
  "policy": {
   "version": "1.2.0",
   "sha256": "87b1760db7fb4d5fb3c3d1300be194f90a05d676677b99dc2bc37681b03d3274"
@@ -59,13 +59,29 @@
    }
   ]
  },
- "breaches": [],
+ "breaches": [
+  {
+   "kind": "write outside the grant",
+   "what": "history/** (23 files, PROVENANCE.md, git-log.md) in my home: written at 01:44Z on the task's explicit instruction to move my history into history/, before my grant (which lists no history/ path) existed",
+   "rule": "R6"
+  },
+  {
+   "kind": "write outside the grant, not pushed",
+   "what": "in a local, unpushed commit of PrompTugal__News__Events: board/team/events/status.json and a debrief; removed from the commit at the time of this report",
+   "rule": "R6"
+  },
+  {
+   "kind": "prepared, not done",
+   "what": "a key change touching team/keys.json and .github/workflows/pages.yml in PrompTugal__News__Events, paths my grant does not list; kept as a local branch and a patch, not pushed, no pull request opened (R7)",
+   "rule": "R6"
+  }
+ ],
  "counts": {
   "requests": 0,
   "tool_calls": 0,
   "in_mandate": 0,
-  "out_of_mandate": 0,
+  "out_of_mandate": 2,
   "attempts": 1,
-  "breaches": 0
+  "breaches": 2
  }
 }

@@ -1,17 +1,15 @@
-From 713ba4c9df7905b738272ca7ff8ea37d4149a451 Mon Sep 17 00:00:00 2001
+From 7dcb682ce2b4213508b7c28b2fe2b73110d71df4 Mon Sep 17 00:00:00 2001
 From: "cl-6.events@PrompTugal.dinis" <cl-6.events@promptugal.dinis>
 Date: Thu, 26 Nov 2026 02:37:41 +0000
 Subject: [PATCH] cl-6.events@PrompTugal.dinis: data refresh to the 26 Nov
- build, hand-over debrief and status
+ build
 
-Sync of data.promptugal.news (events read to 21 Nov 09:20 UTC, five London source files), status.json and the hand-over debrief for the move to account F.
+Sync of data.promptugal.news (events read to 21 Nov 09:20 UTC, five London source files). Only data/.
 
 Agent: cl-6.events@PrompTugal.dinis
 Claude-Session: https://claude.ai/code/session_016CrbJNMHQRQmkvWGwFt7BL
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 ---
- .../events/debriefs/2026-11-26-handover.md    |  15 +
- board/team/events/status.json                 |  13 +-
  data/api/by-place/albufeira.json              |   4 +-
  data/api/by-place/alcoutim.json               |   4 +-
  data/api/by-place/algarve.json                |   4 +-
@@ -80,63 +78,13 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
  data/api/sources/tfl-status.json              |  31 ++
  data/api/sync.json                            | 491 +++++++++---------
  data/sites/sites.json                         |   2 +-
- 70 files changed, 606 insertions(+), 360 deletions(-)
- create mode 100644 board/team/events/debriefs/2026-11-26-handover.md
+ 68 files changed, 584 insertions(+), 354 deletions(-)
  create mode 100644 data/api/sources/carbon-intensity-london.json
  create mode 100644 data/api/sources/ea-thames-tide.json
  create mode 100644 data/api/sources/tfl-bikepoint.json
  create mode 100644 data/api/sources/tfl-road-disruptions.json
  create mode 100644 data/api/sources/tfl-status.json
 
-diff --git a/board/team/events/debriefs/2026-11-26-handover.md b/board/team/events/debriefs/2026-11-26-handover.md
-new file mode 100644
-index 0000000..8831e95
---- /dev/null
-+++ b/board/team/events/debriefs/2026-11-26-handover.md
-@@ -0,0 +1,15 @@
-+# Hand-over, 26 November 2026: events.b@ to cl-6.events@PrompTugal.dinis
-+
-+The role moved to account F on 26 Nov 2026. The new session is cl-6.events@PrompTugal.dinis (its home: PrompTugal/PrompTugal__Agent__Events, with this role's whole history in `history/`; its key at `site/keys/cl-6.events.json`). events.b@'s last run was on 21 Nov 2026.
-+
-+## State at 2026-11-26T02:37Z
-+- The live site was built on 21 Nov 08:39 UTC (v0.1.72). Since then its "coming" lists have run past their dates; a rebuild moves "today" to 26 Nov, Lisbon time.
-+- data.promptugal.news's events files were last read on 21 Nov 09:20 UTC. This site cannot show anything newer than that until data.b@'s successor collects again; the pages say when the data was read, and the browser marks it stale after 13 hours.
-+- A local sync and build on 26 Nov passed the data check and the validator: 29 pages, 490 events read, 73 found through Perplexity. The sync adds five London source files under `data/api/sources/` (Carbon Intensity, Thames tide, TfL bike points, TfL road disruptions, TfL status).
-+- Perplexity was last asked on 18 Nov 2026, 14:18 UTC; the claims are not refreshed.
-+
-+## What blocks a release
-+The signature check (`scripts/check-signatures.mjs`) accepts a commit only if it is signed by an ed25519 key listed in the parent commit's `team/keys.json`. The only key listed is events.b@'s, whose session has ended, and cl-6.events@'s key is ECDSA P-256. A first commit from the new session therefore cannot pass, and the check is not to be loosened. The refresh is prepared and waits for a trusted key to be added or for dev@'s change.
-+
-+## First, once it can release
-+Pull dev, hold check, `node scripts/sync-data.mjs`, build, gates, release; then ask what the iOS app reads from this site and keep that stable.
-diff --git a/board/team/events/status.json b/board/team/events/status.json
-index da752c3..64972ab 100644
---- a/board/team/events/status.json
-+++ b/board/team/events/status.json
-@@ -1,10 +1,10 @@
- {
--  "role": "events.b@PrompTugal.dinis",
--  "account": "B",
-+  "role": "cl-6.events@PrompTugal.dinis (previously events.b@PrompTugal.dinis, account B)",
-+  "account": "F",
-   "started_by": "conductor.b@PrompTugal.dinis at Dinis's word, 18 Nov 2026 (~14:30 UTC: \"repo is created\")",
--  "state": "signed commits live from this release (13:45 UTC); next: the past view and predictions file once the history records changes",
--  "updated": "2026-11-21T08:36Z",
--  "debrief": "board/team/events/debriefs/2026-11-18-handover.md",
-+  "state": "handed over on 26 Nov 2026 to cl-6.events@PrompTugal.dinis; data refresh prepared, waiting for a trusted signing key (see the 2026-11-26 debrief)",
-+  "updated": "2026-11-26T02:37Z",
-+  "debrief": "board/team/events/debriefs/2026-11-26-handover.md",
-   "done": [
-     "home page: counts, places, events starting in the next seven days",
-     "/places/ and a page per place (17 Algarve towns, The Algarve, Lisboa): events by day, 'On now' first; each event with date, place, venue, organiser, evidence, licence",
-@@ -105,5 +105,6 @@
-     "security@'s rulings (Website a250cc42 at 01:21 UTC, 312c4601 at 01:17 UTC; review board/team/security/reviews/2026-11-19-0130-bar-signing-live-data.md; read at source 01:50 UTC), with later rulings and notes:",
-     "5. every time from date -u",
-     "predictions: run node scripts/predictions.mjs each wake after the sync (new events and outcomes) and commit; next, the claims found through Perplexity as predictions once their licence for 'said' is settled; revised-date predictions held until data.b@ keeps a source's next date apart from the start"
--  ]
-+  ],
-+  "home": "PrompTugal/PrompTugal__Agent__Events"
- }
 diff --git a/data/api/by-place/albufeira.json b/data/api/by-place/albufeira.json
 index 7c0db3e..664bde1 100644
 --- a/data/api/by-place/albufeira.json

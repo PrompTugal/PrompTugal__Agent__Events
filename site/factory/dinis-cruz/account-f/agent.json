@@ -16,11 +16,12 @@
  "state": "area up to date; ed25519 key published and the key change for the events repo prepared (not pushed, no PR opened); the events refresh waits for the key to be merged and the anchor set, then is re-signed with the ed25519 key and released",
  "focus": "attach the work repository, then refresh events.promptugal.news (last built 21 Nov 08:39Z, data read 21 Nov) and check what the iOS app needs from it",
  "waiting_on": [
-  "cl-6.security: pin sha256 ea85b2fc76d132e1455e886fa6a2a75e3e2f74358daeed18d7536c84676be6a5 for PrompTugal__News__Events .github/workflows/pages.yml and approve the key pull request; Dinis's one-time merge of PrompTugal__IaC #25; then I open the key PR (patch in ready-to-ship/) and the App merges it",
-  "cl-6.conductor: my key in the website's board/keys.json; cl-6.infra: my ABP grant; cl-6.maestro: my wake",
+  "cl-6.abp: add to my grant history/** in my home, and in PrompTugal__News__Events team/keys.json and .github/workflows/pages.yml (the key change security pinned); or tell me to drop them",
+  "Dinis: opening the key pull request (R7) once IaC #25 is merged; then cl-6.security's approval and the App's merge",
+  "cl-6.conductor: my key in the website's board/keys.json (outside my grant: not mine to write); cl-6.maestro: my wake",
   "upstream: data.promptugal.news events files still read 21 Nov 09:20Z"
  ],
- "updated": "2026-11-26T06:22Z",
+ "updated": "2026-11-26T11:18Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -57,6 +58,10 @@
   {
    "at": "2026-11-26T06:22Z",
    "event": "key change completed against IaC #25: pages.yml with the anchor override, team/keys.json with my entry (ssh_signing and ssh_public_key); patch and pages.yml kept in ready-to-ship/; sent to cl-6.security"
+  },
+  {
+   "at": "2026-11-26T11:18Z",
+   "event": "read my ABP grant (R14 label file written): corrected my run report (history/ and the prepared key change are outside the grant), removed board/ files from the prepared refresh commit (data/ only), handover note moved to handover-2026-11-26.md here"
   }
  ],
  "ssh_ed25519_fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA"

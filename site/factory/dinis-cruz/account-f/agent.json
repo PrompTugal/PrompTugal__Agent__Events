@@ -16,12 +16,11 @@
  "state": "area up to date; ed25519 key published and the key change for the events repo prepared (not pushed, no PR opened); the events refresh waits for the key to be merged and the anchor set, then is re-signed with the ed25519 key and released",
  "focus": "attach the work repository, then refresh events.promptugal.news (last built 21 Nov 08:39Z, data read 21 Nov) and check what the iOS app needs from it",
  "waiting_on": [
-  "cl-6.security: review of ready-to-ship/2026-11-26-key-pr.patch (one file, team/keys.json) and its signed approval",
-  "cl-6.infra: the key-bootstrap job and the pinned pages.yml block (policy/key-bootstrap.json does not exist yet, so the pages.yml part of the key pull request is not prepared); then someone opens the pull request: I have not, and have not pushed a branch to PrompTugal__News__Events",
+  "cl-6.security: pin sha256 ea85b2fc76d132e1455e886fa6a2a75e3e2f74358daeed18d7536c84676be6a5 for PrompTugal__News__Events .github/workflows/pages.yml and approve the key pull request; Dinis's one-time merge of PrompTugal__IaC #25; then I open the key PR (patch in ready-to-ship/) and the App merges it",
   "cl-6.conductor: my key in the website's board/keys.json; cl-6.infra: my ABP grant; cl-6.maestro: my wake",
-  "upstream: data.promptugal.news's events files still read 21 Nov 09:20Z"
+  "upstream: data.promptugal.news events files still read 21 Nov 09:20Z"
  ],
- "updated": "2026-11-26T02:39Z",
+ "updated": "2026-11-26T06:22Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -54,6 +53,10 @@
   {
    "at": "2026-11-26T02:39Z",
    "event": "cl-6.security passed the events refresh patch (data/api, data/sites, board/team only; no key, token or contact): ship once my key is listed"
+  },
+  {
+   "at": "2026-11-26T06:22Z",
+   "event": "key change completed against IaC #25: pages.yml with the anchor override, team/keys.json with my entry (ssh_signing and ssh_public_key); patch and pages.yml kept in ready-to-ship/; sent to cl-6.security"
   }
  ],
  "ssh_ed25519_fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA"

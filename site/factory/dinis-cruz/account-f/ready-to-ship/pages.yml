@@ -1,0 +1,238 @@
+name: Pages
+# From the site repositories made by sites@AgentiCCells.dinis (2026-11-16). In the
+# template itself (.factory-template exists) nothing is deployed: it is built,
+# checked and versioned only. A seeded site deploys on every push to dev.
+on:
+  push:
+    branches: [dev]
+  # By hand, by a person only. No schedule: every run starts from a commit (Dinis, 19 Nov 2026 ~01:20 UTC).
+  # Pages load the data live in the browser, so they follow data.promptugal.news without a rebuild.
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+env:
+  # Major and minor are set here by a person. The patch number is set by this workflow only:
+  # the first release is v0.1.0, and each later push to dev adds one.
+  VERSION_BASE: '0.1'
+# Actions pinned to commits (finding EV-2026-011, 18 Nov 2026): to update, look up the tag's commit with
+# git ls-remote https://github.com/<owner>/<action> refs/tags/<tag> and change the SHA and its comment together.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      deploy: ${{ steps.mode.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: No release during a hold
+        run: if [ -e board/HOLD.md ]; then echo "board/HOLD.md exists" >&2; exit 1; fi
+      - id: version
+        name: Work out the next version from the tags
+        run: |
+          last=$(git tag --list "v${VERSION_BASE}.*" | sed "s/^v${VERSION_BASE}\.//" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
+          if [ -z "$last" ]; then next=0; else next=$((last + 1)); fi
+          echo "version=v${VERSION_BASE}.${next}" >> "$GITHUB_OUTPUT"
+          echo "Version: v${VERSION_BASE}.${next}"
+      - id: mode
+        name: Deploy unless this is the template itself
+        run: if [ -e .factory-template ]; then echo deploy=false >> "$GITHUB_OUTPUT"; else echo deploy=true >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: The signature check's and the workflow's own tests (the pushed code)
+        run: |
+          node scripts/test-check-signatures.mjs
+          node scripts/test-workflow.mjs
+      - name: The leak scan's key rules have tests
+        run: node scripts/test-leak-scan.mjs
+      - name: The predictions file passes the library's checks and only grows (the pushed code; release.sh checks it too)
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          node scripts/test-predictions.mjs
+          node scripts/test-past.mjs
+          case "$BEFORE" in ''|0000000000000000000000000000000000000000) node scripts/check-predictions.mjs ;; *) node scripts/check-predictions.mjs "$BEFORE" ;; esac
+      - name: Copy the events data from data.promptugal.news (a failed read keeps the copy in git)
+        run: node scripts/sync-data.mjs
+      - name: Check the synced data (on failure, keep the last copy in git; finding EV-2026-006)
+        run: node scripts/check-data.mjs --restore
+      - run: node scripts/build.mjs
+        env:
+          SITE_VERSION: ${{ steps.version.outputs.version }}
+      - run: node scripts/validate.mjs
+      - if: steps.mode.outputs.deploy == 'true'
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - if: steps.mode.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: _site
+  verify:
+    # security@'s control 9 (Website 16402a95c, from civic): the security checks run in their own job, which runs no code from
+    # the pushed tree. It checks out, reads the anchor A from GitHub's API (the head commit of the latest successful push run
+    # of this workflow on dev; sixth ruling, 0ba439611), takes the checkers from A's tree (regular files only, no symlinks) into
+    # RUNNER_TEMP, and runs them with an absolute node path under env -i (no NODE_OPTIONS) and GIT_NO_REPLACE_OBJECTS=1.
+    # The built site reaches it only as data, the Pages artifact, unpacked into _site/ for the leak scan. The checked range is
+    # A..AFTER. A missing A, an A that is not an ancestor of AFTER, or a missing checker fails: no fallback, no tags.
+    # A run by hand (workflow_dispatch) checks A..HEAD the same way.
+    needs: build
+    if: github.ref == 'refs/heads/dev' && needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    env:
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_ATTR_SOURCE: 4b825dc642cb6eb9a060e54bf8d69288fbee4904
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # live.b@'s a4c6fce: a pushed _site (a symlink, say) is refused before the artifact is downloaded. Pushed .gitattributes
+      # are switched off for every git command here by GIT_ATTR_SOURCE (the empty tree; git 2.42 or later), which also
+      # overrides the index copy, unlike removing the files (AppSec review, 19 Nov 2026); the leak scan still scans them.
+      - name: Refuse a pushed _site path; need a git that honours GIT_ATTR_SOURCE
+        shell: bash
+        env:
+          AFTER: ${{ github.sha }}
+        run: |
+          if [ -n "$(git ls-tree "$AFTER" _site)" ] || [ -e _site ] || [ -L _site ]; then echo "the pushed tree holds a _site path: refused" >&2; exit 1; fi
+          # Fail closed: the fields must be numbers first, since [ -lt ] on anything else errors and reads as false (videos.b@'s 7d1e31b);
+          # no leading zero (octal in (( ))) and at most four digits (no overflow), from the AppSec review.
+          gv=$(git version); [[ $gv =~ ^git\ version\ (0|[1-9][0-9]{0,3})\.(0|[1-9][0-9]{0,3})(\.|$) ]] || { echo "cannot read git's version ($gv): refused" >&2; exit 1; }
+          ma=${BASH_REMATCH[1]}; mi=${BASH_REMATCH[2]}
+          if (( ma < 2 || (ma == 2 && mi < 42) )); then echo "git $ma.$mi ignores GIT_ATTR_SOURCE: refused" >&2; exit 1; fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/site-artifact
+      - name: Signatures, trailers and the leak scan, from the anchor A, in a job that has run no pushed code
+        env:
+          AFTER: ${{ github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NODE=$(command -v node); case "$NODE" in /*) ;; *) echo "no absolute path to node" >&2; exit 1;; esac
+          if [ "$(git rev-parse --is-shallow-repository)" != "false" ]; then echo "a shallow checkout: the checks need the full history" >&2; exit 1; fi
+          # A: the head commit of the latest run of this workflow file, on dev, for a push, that concluded success (security@'s
+          # sixth ruling, Website 0ba439611; only GitHub Actions creates runs). Read from GitHub's API, never from git.
+          # ... and in which the job named verify itself passed: a pushed workflow that drops verify can "succeed" but never
+          # becomes A (live.b@'s a4c6fce). The newest such run among the last 20 is taken.
+          A=""
+          if [ -n "${{ vars.SIG_BOOTSTRAP_ANCHOR }}" ]; then A="${{ vars.SIG_BOOTSTRAP_ANCHOR }}"; echo "anchor set by PrompTugal__IaC: $A"; else
+          rows=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/runs?branch=dev&event=push&status=success&per_page=20" \
+            --jq '.workflow_runs[] | select(.path == ".github/workflows/pages.yml" and .head_branch == "dev" and .event == "push" and .conclusion == "success") | "\(.id):\(.head_sha)"') \
+            || { echo "cannot read this workflow's runs" >&2; exit 1; }
+          for row in $rows; do
+            printf '%s' "$row" | grep -Eq '^[0-9]+:[0-9a-f]{40}$' || { echo "an unexpected run row: refused" >&2; exit 1; }
+            v=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/${row%%:*}/jobs?per_page=50" --jq '[.jobs[] | select(.name == "verify" and .conclusion == "success")] | length') || { echo "cannot read a run's jobs" >&2; exit 1; }
+            if [ "$v" = "1" ]; then A="${row##*:}"; break; fi
+          done
+          fi
+          if ! printf '%s' "$A" | grep -Eq '^[0-9a-f]{40}$'; then echo "no successful push run of this workflow on dev to anchor on" >&2; exit 1; fi
+          git cat-file -e "$A^{commit}" 2>/dev/null || { echo "the anchor $A is not in this history" >&2; exit 1; }
+          git merge-base --is-ancestor "$A" "$AFTER" || { echo "the anchor $A is not an ancestor of $AFTER (a force push?)" >&2; exit 1; }
+          # control-10 begin: no symlinks, unless listed with a reason in A's tree (security@'s control 10, Website ed70bd996).
+          # Every commit in A..AFTER (merges against each parent), not only the final tree; then the checked-out tree. A new
+          # exception counts only from the next anchor, since the list is read from A. The built site allows none (below).
+          # An exception is a path, a tab, the link's exact target, a tab and a reason: a listed link re-pointed elsewhere fails
+          # (library.b@'s LIB-2026-069, via conductor.b@ 19:46 UTC). Paths and targets compare as raw bytes.
+          EXC=(); TGT=()
+          # A link's target, byte for byte (a trailing newline kept, so "f" + newline never matches "f"), into T; a failed read stops.
+          blob_target() { T=$(git cat-file blob "$1" && printf x) || { echo "cannot read the target of a link ($1): refused" >&2; exit 1; }; T=${T%x}; }
+          disk_target() { T=$(readlink -- "$1" && printf x) || { echo "cannot read the target of a link ($1): refused" >&2; exit 1; }; T=${T%$'\n'x}; }
+          listed() { local i; case "$1$2" in *$'\n'*|*$'\r'*) return 1;; esac; for i in "${!EXC[@]}"; do [ "${EXC[$i]}" = "$1" ] && [ "${TGT[$i]}" = "$2" ] && return 0; done; return 1; }
+          emode=$(git ls-tree "$A" .github/symlink-exceptions.txt | cut -d' ' -f1)
+          if [ -n "$emode" ]; then
+            [ "$emode" = "100644" ] || { echo "the symlink exceptions file in the anchor is not a regular file: refused" >&2; exit 1; }
+            git show "$A:.github/symlink-exceptions.txt" > "$RUNNER_TEMP/symlink-exceptions.raw"
+            while IFS= read -r l || [ -n "$l" ]; do
+              case "$l" in ''|'#'*) continue;; esac
+              p=${l%%$'\t'*}; rest=${l#*$'\t'}; t=${rest%%$'\t'*}; r=${rest#*$'\t'}
+              if [ "$p" = "$l" ] || [ "$r" = "$rest" ] || [ -z "$p" ] || [ -z "$t" ] || [ -z "${r//[[:space:]]/}" ]; then echo "a symlink exception needs a path, a tab, a target, a tab and a reason: refused" >&2; exit 1; fi
+              EXC+=("$p"); TGT+=("$t")
+            done < "$RUNNER_TEMP/symlink-exceptions.raw"
+          fi
+          bad=0
+          git rev-list "$A..$AFTER" > "$RUNNER_TEMP/range"
+          while IFS= read -r c; do
+            git diff-tree -z -r --raw --no-commit-id --no-renames --root -m "$c" > "$RUNNER_TEMP/dt"
+            while IFS= read -r -d '' meta && IFS= read -r -d '' path; do
+              set -- $meta
+              if [ "$2" = "120000" ]; then blob_target "$4"; fi
+              if [ "$2" = "120000" ] && ! listed "$path" "$T"; then echo "${c:0:7}: adds or changes a symbolic link: $path" >&2; bad=1; fi
+            done < "$RUNNER_TEMP/dt"
+          done < "$RUNNER_TEMP/range"
+          # AFTER's own tree, whatever the range shows (LIB-2026-069 point 4)
+          git ls-tree -r -z "$AFTER" > "$RUNNER_TEMP/tree"
+          while IFS= read -r -d '' rec; do
+            meta=${rec%%$'\t'*}; path=${rec#*$'\t'}; set -- $meta
+            if [ "$1" = "120000" ]; then blob_target "$3"; fi
+            if [ "$1" = "120000" ] && ! listed "$path" "$T"; then echo "a symbolic link in the pushed tree: $path" >&2; bad=1; fi
+          done < "$RUNNER_TEMP/tree"
+          find . -path ./.git -prune -o -type l -print0 > "$RUNNER_TEMP/links"
+          while IFS= read -r -d '' path; do
+            disk_target "$path"
+            if ! listed "${path#./}" "$T"; then echo "a symbolic link in the checked-out tree: ${path#./}" >&2; bad=1; fi
+          done < "$RUNNER_TEMP/links"
+          [ "$bad" = 0 ] || { echo "symbolic links refused (control 10)" >&2; exit 1; }
+          # control-10 end
+          # The built site is hostile data from a job that ran pushed code: list it first and refuse anything but plain files
+          # and directories, and any absolute or parent path; unpack it before the trusted copies exist (so nothing in it can
+          # write to them); refuse symlinks again after unpacking.
+          ART="$RUNNER_TEMP/site-artifact/artifact.tar"
+          if tar -tvf "$ART" | cut -c1 | grep -qv '^[-d]$'; then echo "the built site holds an entry that is not a plain file or directory: refused" >&2; exit 1; fi
+          if tar -tf "$ART" | grep -Eq '(^/|(^|/)\.\.(/|$))'; then echo "the built site holds an absolute or parent path: refused" >&2; exit 1; fi
+          rm -rf _site && mkdir _site && tar -xf "$ART" -C _site --no-same-owner --no-same-permissions --no-overwrite-dir
+          if [ -n "$(find _site -type l -print -quit)" ]; then echo "the built site holds a symbolic link: refused" >&2; exit 1; fi
+          T="$RUNNER_TEMP/trusted"; [ ! -e "$T" ] || { echo "$T exists before the trusted copies are written: refused" >&2; exit 1; }; mkdir "$T"
+          for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
+            mode=$(git ls-tree "$A" "scripts/$f" | cut -d' ' -f1)
+            [ "$mode" = "100644" ] || [ "$mode" = "100755" ] || { echo "no regular-file copy of scripts/$f in the anchor $A (mode ${mode:-none})" >&2; exit 1; }
+            git show "$A:scripts/$f" > "$T/$f"
+          done
+          # The predictions file's checker too, from A once A has it (added 20 Nov 2026): append only since A, so a push cannot
+          # weaken the checker that checks it (AppSec review). Before A has it, the build job's run of the pushed copy stands.
+          pmode=$(git ls-tree "$A" scripts/check-predictions.mjs | cut -d' ' -f1)
+          case "$pmode" in 100644|100755) git show "$A:scripts/check-predictions.mjs" > "$T/check-predictions.mjs" ;; '') ;; *) echo "scripts/check-predictions.mjs in the anchor is not a regular file" >&2; exit 1 ;; esac
+          chmod -R a-w "$T"
+          env -i PATH="$PATH" HOME="$HOME" GIT_NO_REPLACE_OBJECTS=1 GIT_ATTR_SOURCE="$GIT_ATTR_SOURCE" "$NODE" "$T/check-commits.mjs" "$A" "$AFTER"
+          env -i PATH="$PATH" HOME="$HOME" GIT_NO_REPLACE_OBJECTS=1 GIT_ATTR_SOURCE="$GIT_ATTR_SOURCE" "$NODE" "$T/check-signatures.mjs" "$AFTER"
+          env -i PATH="$PATH" HOME="$HOME" GIT_NO_REPLACE_OBJECTS=1 GIT_ATTR_SOURCE="$GIT_ATTR_SOURCE" "$NODE" "$T/leak-scan.mjs"
+          if [ -f "$T/check-predictions.mjs" ]; then env -i PATH="$PATH" HOME="$HOME" GIT_NO_REPLACE_OBJECTS=1 GIT_ATTR_SOURCE="$GIT_ATTR_SOURCE" "$NODE" "$T/check-predictions.mjs" "$A"; fi
+  deploy:
+    needs: [build, verify]
+    if: github.ref == 'refs/heads/dev' && needs.build.outputs.deploy == 'true' && needs.verify.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+  tag:
+    needs: [build, verify, deploy]
+    # Tags a push only; a run by hand deploys but does not tag (AppSec review, 18 Nov 2026).
+    if: ${{ always() && github.ref == 'refs/heads/dev' && github.event_name == 'push' && needs.build.result == 'success' && needs.verify.result == 'success' && needs.deploy.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Tag the released commit
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          git tag "$VERSION" "$GITHUB_SHA"
+          git push origin "$VERSION"

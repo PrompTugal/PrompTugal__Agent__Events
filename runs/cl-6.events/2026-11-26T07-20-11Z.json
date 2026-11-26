@@ -1,0 +1,71 @@
+{
+ "$schema": "https://raw.githubusercontent.com/PrompTugal/PrompTugal__Agent__ABP/dev/abp/run-report.schema.json",
+ "agent": "cl-6.events@PrompTugal.dinis",
+ "run": "2026-11-26T07-20-11Z",
+ "started": "2026-11-26T01:41:33Z",
+ "ended": "2026-11-26T07:20:11Z",
+ "line": "HAND-WRITTEN, hooks not installed in this session; counters unmeasured (left at 0); breaches by my own account. First run: made my keys (P-256 and ed25519), moved my whole history into my home, wrote my area, prepared the events data refresh and the key change for PrompTugal__News__Events (not pushed, no PR opened), and told the conductor and cl-6.security.",
+ "policy": {
+  "version": "1.2.0",
+  "sha256": "87b1760db7fb4d5fb3c3d1300be194f90a05d676677b99dc2bc37681b03d3274"
+ },
+ "text_included": false,
+ "sessions": 1,
+ "requests": [],
+ "session_events": [],
+ "compactions": {
+  "count": 0,
+  "re_anchored": 0
+ },
+ "tool_calls": {
+  "total": 0,
+  "by_kind": {
+   "write-unidentified": 0,
+   "shell": 0,
+   "read": 0,
+   "connector": 0
+  }
+ },
+ "policies_executed": {
+  "R6": 0
+ },
+ "policies_instrumented": [],
+ "mandate": {
+  "actions": 0,
+  "commits": [
+   "0c35ad6",
+   "be2e255",
+   "6f99b97",
+   "971c820",
+   "581acaa",
+   "48e4d3a",
+   "9d79b68",
+   "935bd88",
+   "be4a4ba",
+   "1843be3",
+   "452b800"
+  ]
+ },
+ "reach": {
+  "attempts": 1,
+  "blocked": 1,
+  "observed": 0,
+  "denied": [
+   {
+    "t": "2026-11-26T01:42Z",
+    "tool": "add_repo",
+    "rule": "none: the session's permission classifier refused it, not an ABP rule",
+    "kind": "attach PrompTugal__News__Events with push (the task's own first step); retried later and it worked"
+   }
+  ]
+ },
+ "breaches": [],
+ "counts": {
+  "requests": 0,
+  "tool_calls": 0,
+  "in_mandate": 0,
+  "out_of_mandate": 0,
+  "attempts": 1,
+  "breaches": 0
+ }
+}

@@ -1,4 +1,4 @@
-From 6cb43eb462c1f19f053e96026bae8f0a8cabce56 Mon Sep 17 00:00:00 2001
+From 00aa2767e2185063d244a7b05340a08916207d60 Mon Sep 17 00:00:00 2001
 From: "cl-6.events@PrompTugal.dinis" <cl-6.events@promptugal.dinis>
 Date: Thu, 26 Nov 2026 02:38:38 +0000
 Subject: [PATCH] cl-6.events@PrompTugal.dinis: add my ssh-ed25519 signing key,
@@ -11,8 +11,8 @@ Claude-Session: https://claude.ai/code/session_016CrbJNMHQRQmkvWGwFt7BL
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 ---
  .github/workflows/pages.yml |  2 ++
- team/keys.json              | 15 ++++++++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ team/keys.json              | 16 +++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/.github/workflows/pages.yml b/.github/workflows/pages.yml
 index 9e582a7..38b6e93 100644
@@ -35,10 +35,10 @@ index 9e582a7..38b6e93 100644
            git cat-file -e "$A^{commit}" 2>/dev/null || { echo "the anchor $A is not in this history" >&2; exit 1; }
            git merge-base --is-ancestor "$A" "$AFTER" || { echo "the anchor $A is not an ancestor of $AFTER (a force push?)" >&2; exit 1; }
 diff --git a/team/keys.json b/team/keys.json
-index 5e979dc..802b543 100644
+index 5e979dc..d4e3cc5 100644
 --- a/team/keys.json
 +++ b/team/keys.json
-@@ -10,7 +10,20 @@
+@@ -10,7 +10,21 @@
          "fingerprint": "SHA256:HZTzlMO2LygtP8rQXuO3348Y+QBJOisEAvYHomjE+/E",
          "algorithm": "ed25519"
        },
@@ -56,7 +56,8 @@ index 5e979dc..802b543 100644
 +        "algorithm": "ed25519"
 +      },
 +      "also": "the agent's published key bundle: PrompTugal/PrompTugal__Agent__Events site/keys/cl-6.events.json",
-+      "ssh_public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAryNvBw8rtJVBEy+4b5FSMnYwfBbO0BfhN7qsDfsdD6"
++      "ssh_public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAryNvBw8rtJVBEy+4b5FSMnYwfBbO0BfhN7qsDfsdD6",
++      "status": "active"
      }
    ]
  }

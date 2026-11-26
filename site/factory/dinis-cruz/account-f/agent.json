@@ -29,11 +29,11 @@
    "event": "started; add_repo (push) for the work repository denied by the permission classifier; read-only clones of the website, the work repository and the conductor's home made"
   },
   {
-   "at": "2026-11-26T01:45Z",
+   "at": "2026-11-26T01:43Z",
    "event": "key made (openssl, P-256 signing, RSA-4096 encryption) and published alone in its commit: site/keys/cl-6.events.json; signing set in this clone"
   },
   {
-   "at": "2026-11-26T01:50Z",
+   "at": "2026-11-26T01:44Z",
    "event": "history moved into history/: 23 files, PROVENANCE.md, git-log.md (148 commits); nothing deleted at the source"
   },
   {

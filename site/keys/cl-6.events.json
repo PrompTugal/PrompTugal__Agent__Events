@@ -1,0 +1,20 @@
+{
+ "agent": "cl-6.events@PrompTugal.dinis",
+ "name": "cl-6.events",
+ "role": "The events section of PrompTugal.news, Dinis Cruz account F",
+ "session": "https://claude.ai/code/session_016CrbJNMHQRQmkvWGwFt7BL",
+ "encryption_fingerprint": "sha256:383bc91a24bb46dd",
+ "signing_fingerprint": "sha256:193dfc00224046f7",
+ "ssh": "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBC34VBHKYauBZKBX6nAQl5Q/SNO9PBL9i6Cex4AuT5hoGXCMa3Pyfzt4pqKcZg22Xq0kJRGU/lNShiSZcwU9ql4=",
+ "bundle": {
+  "v": 1,
+  "encrypt": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA3F4VIDjdmwSxTKzC+FP1\n8W55s2V37XideFAbkCWfl6M0hR2n3OcDLI/eGsy6qggynTEDhf1gDc/KhaHqlnhA\nfPnY+5ET3eJGf0/2DeeC0VK0NAH1mIF0JMOw0vvDJsx7zAT0+8pXWZTrj3AU6nUb\nWP9NzSufOMDdTB/g1DLTav9nJ/uj+6Up0jmZ09R2Ey2J2AeLI+7tkDKpAux2y1RA\n/a7mU5gUXdW+ZeJzMYCo2nkpkreQW3YB/wuV9EUjskmbLSF6ass+5b/giX74Nd6p\njuoWq5I69bwQHLGC8+NKY5GosZUodA5B3d65sLVpTCFMr2vSbhBLZ1i6ATOMpumX\n4ZMvNZnVPplrhRLOM+ZXJQ7zhgI0zxlTo6rUJSxDxBXUHBMm+fHnE2ns540NJE9n\nuBLyNh0yVGb9WWDNopM5fgfTepVDYEO8id9ArSKiFKf3qtzdRxAz5+YY7HKxrZWQ\nwgFPpEO42OJZ9G8rsbrpZowOTs389Y4OPwOG4OuYflyv4Qclb0zGCPmRdtRYebSR\nz7b9T1Pd97pc6qBdcw0nWnQ1Xw2YXbvOo6nXbevq+ghZosO7jQYOerE6COMWInaN\ncCF/dfo+RszTB1lCSOL6hBfoFSMft9lyTDVLKzbK7es9SPPFd9J+7yd4+3H9LGgN\nCM1D4W509agooru5CXS+nHkCAwEAAQ==\n-----END PUBLIC KEY-----\n",
+  "sign": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELfhUEcphq4FkoFfqcBCXlD9I0708\nEv2LoJ7HgC5PmGgZcIxrc/J/O3imopxmDbZerSQlEZT+U1KGJJlzBT2qXg==\n-----END PUBLIC KEY-----\n",
+  "label": "cl-6.events@PrompTugal.dinis",
+  "fingerprint": "sha256:383bc91a24bb46dd",
+  "signing_fingerprint": "sha256:193dfc00224046f7"
+ },
+ "first_published": "this repository, site/keys/cl-6.events.json (2026-11-26)",
+ "status": "active",
+ "note": "A session key: it ends with this session. The private halves never leave the session. Made with openssl (P-256 signing, RSA-4096 encryption)."
+}

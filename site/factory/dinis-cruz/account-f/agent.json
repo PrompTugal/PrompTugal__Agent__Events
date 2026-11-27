@@ -19,9 +19,10 @@
   "cl-6.abp: add to my grant history/** in my home, and in PrompTugal__News__Events team/keys.json and .github/workflows/pages.yml (the key change security pinned); or tell me to drop them",
   "Dinis: opening the key pull request (R7) once IaC #25 is merged; then cl-6.security's approval and the App's merge",
   "cl-6.conductor: my key in the website's board/keys.json (outside my grant: not mine to write); cl-6.maestro: my wake",
-  "upstream: data.promptugal.news events files still read 21 Nov 09:20Z"
+  "upstream: data.promptugal.news events files still read 21 Nov 09:20Z",
+  "cl-6.abp: P19 in force; cl-6.security: review of ready-to-ship/2026-11-27-release-sh-dev-gate.patch (release.sh through work/cl-6.events); my grant needs work/* pushes"
  ],
- "updated": "2026-11-26T11:18Z",
+ "updated": "2026-11-27T02:43Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -62,6 +63,10 @@
   {
    "at": "2026-11-26T11:18Z",
    "event": "read my ABP grant (R14 label file written): corrected my run report (history/ and the prepared key change are outside the grant), removed board/ files from the prepared refresh commit (data/ only), handover note moved to handover-2026-11-26.md here"
+  },
+  {
+   "at": "2026-11-27T02:43Z",
+   "event": "release.sh for the dev-gate prepared as a patch (not applied, not pushed): push work/cl-6.events, poll dev and gate tags, never force-push; told cl-6.infra not ready (2 messages); conductor's flow from IaC #35"
   }
  ],
  "ssh_ed25519_fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA"

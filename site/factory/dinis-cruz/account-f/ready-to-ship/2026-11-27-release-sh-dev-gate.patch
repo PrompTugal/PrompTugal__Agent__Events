@@ -1,0 +1,48 @@
+From 5f14f48fd244893c162609e54acb138c7cd9681c Mon Sep 17 00:00:00 2001
+From: "cl-6.events@PrompTugal.dinis" <cl-6.events@promptugal.dinis>
+Date: Fri, 27 Nov 2026 02:43:13 +0000
+Subject: [PATCH] cl-6.events@PrompTugal.dinis: release.sh pushes to
+ work/<agent> and waits for the gate (proposal)
+
+Agent: cl-6.events@PrompTugal.dinis
+Claude-Session: https://claude.ai/code/session_016CrbJNMHQRQmkvWGwFt7BL
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ scripts/release.sh | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/release.sh b/scripts/release.sh
+index 4fa31b9..dbae984 100755
+--- a/scripts/release.sh
++++ b/scripts/release.sh
+@@ -59,6 +59,7 @@ trusted_check() {
+   rm -rf "$d"; return $rc
+ }
+ trusted_check
++AGENT_NAME=${AGENT_NAME:-cl-6.events}; WORK="work/$AGENT_NAME"
+ for i in 1 2 3 4 5; do
+   git fetch -q origin dev
+   git rebase -q origin/dev
+@@ -69,7 +70,17 @@ for i in 1 2 3 4 5; do
+   node scripts/leak-scan.mjs >/dev/null
+   node scripts/check-commits.mjs origin/dev HEAD >/dev/null
+   trusted_check >/dev/null
+-  if git -c push.negotiate=true push -q origin HEAD:dev; then echo "released $(git rev-parse --short HEAD) to dev"; exit 0; fi
+-  sleep $((i * 3))
++  # With the dev-gate on (PrompTugal__IaC docs/key-bootstrap.md, "With dev-gate on"): never push dev. Push the release commit to
++  # work/<agent>; the IaC App gives it its status and fast-forwards dev. Never force-push: a rejected push stops the release.
++  SHA=$(git rev-parse HEAD); BASE=$(git rev-parse origin/dev)
++  git -c push.negotiate=true push -q origin "HEAD:refs/heads/$WORK" || { echo "the push to $WORK was refused: stopping (no force-push)" >&2; exit 1; }
++  # Every 90 seconds, for about 20 minutes: dev equal to our SHA means released; a gate/<agent>/<sha12>-fail tag means refused.
++  for t in $(seq 1 14); do
++    sleep 90
++    [ "$(git ls-remote origin refs/heads/dev | cut -f1)" = "$SHA" ] && { echo "released ${SHA:0:7} to dev through $WORK"; exit 0; }
++    if git ls-remote --tags origin "refs/tags/gate/$AGENT_NAME/*" | grep -q "${SHA:0:12}-fail"; then echo "the gate refused ${SHA:0:12}: stopping and reporting" >&2; exit 1; fi
++    [ "$(git ls-remote origin refs/heads/dev | cut -f1)" != "$BASE" ] && { echo "dev moved: rebasing and pushing again"; continue 2; }
++  done
++  echo "no result for ${SHA:0:12} after about 20 minutes: stopping" >&2; exit 1
+ done
+ echo "release failed after 5 attempts" >&2; exit 1
+-- 
+2.43.0
+

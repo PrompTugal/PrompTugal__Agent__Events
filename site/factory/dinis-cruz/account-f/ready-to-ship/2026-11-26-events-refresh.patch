@@ -1,4 +1,4 @@
-From 98d6d4c58c48048d0676f9440b5b7a2a0d390c99 Mon Sep 17 00:00:00 2001
+From ddcfa5d5a7d334d6b9c50f129fb6fa6ee40cb5e1 Mon Sep 17 00:00:00 2001
 From: "cl-6.events@PrompTugal.dinis" <cl-6.events@promptugal.dinis>
 Date: Fri, 27 Nov 2026 07:20:05 +0000
 Subject: [PATCH] cl-6.events@PrompTugal.dinis: data refresh to the 27 Nov
@@ -71,11 +71,21 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
  data/api/history/vila-do-bispo.json           |    4 +-
  .../history/vila-real-de-santo-antonio.json   |    4 +-
  data/api/index.json                           |   52 +-
+ data/api/sources/carbon-intensity-london.json |   31 +
+ data/api/sources/ea-thames-tide.json          |   31 +
  data/api/sources/gaps.json                    |    2 +-
  data/api/sources/index.json                   |   52 +-
+ data/api/sources/tfl-bikepoint.json           |   31 +
+ data/api/sources/tfl-road-disruptions.json    |   31 +
+ data/api/sources/tfl-status.json              |   31 +
  data/api/sync.json                            |  491 +-
  data/sites/sites.json                         |    2 +-
- 65 files changed, 11840 insertions(+), 5774 deletions(-)
+ 70 files changed, 11995 insertions(+), 5774 deletions(-)
+ create mode 100644 data/api/sources/carbon-intensity-london.json
+ create mode 100644 data/api/sources/ea-thames-tide.json
+ create mode 100644 data/api/sources/tfl-bikepoint.json
+ create mode 100644 data/api/sources/tfl-road-disruptions.json
+ create mode 100644 data/api/sources/tfl-status.json
 
 diff --git a/data/api/by-place/albufeira.json b/data/api/by-place/albufeira.json
 index 7c0db3e..6ca7c20 100644
@@ -31697,6 +31707,80 @@ index 3b4d0fa..2f944a1 100644
    }
   ]
  }
+diff --git a/data/api/sources/carbon-intensity-london.json b/data/api/sources/carbon-intensity-london.json
+new file mode 100644
+index 0000000..cb993c5
+--- /dev/null
++++ b/data/api/sources/carbon-intensity-london.json
+@@ -0,0 +1,31 @@
++{
++ "license": {
++  "name": "CC BY 4.0",
++  "url": "https://creativecommons.org/licenses/by/4.0/",
++  "holder": "PrompTugal.news",
++  "note": "What PrompTugal.news makes: this file's structure, records and derived values.",
++  "commercial_use": "allowed",
++  "commercial_note": "With credit to PrompTugal.news; values taken from a source keep that source's licence."
++ },
++ "id": "carbon-intensity-london",
++ "name": "London's electricity carbon intensity (NESO)",
++ "kind": "open-data API",
++ "url": "https://carbonintensity.org.uk/",
++ "owner": "National Energy System Operator (NESO), Carbon Intensity API",
++ "places": [
++  "london"
++ ],
++ "country": "GB",
++ "gives": [
++  "The carbon intensity of the electricity used in London, for the current half hour and forecast 48 hours ahead, with the generation mix."
++ ],
++ "status": "read",
++ "how": "sources/carbon-intensity-london/collect.mjs reads https://carbonintensity.org.uk/ (daily; the source's own cadence: daily)",
++ "terms": {
++  "summary": "The API definitions state CC BY 4.0 and that no operation needs authentication. The API terms: NESO provides the API for free, applies a rate limit and may block applications that make a large number of calls; no selling, leasing or sublicensing of the API, no application that substantially replaces the core user experience, and no NESO logo without written approval.",
++  "page": "https://carbon-intensity.github.io/api-definitions/",
++  "read_at": "2026-11-21"
++ },
++ "on_this_site": "https://data.promptugal.news/sources/carbon-intensity-london/",
++ "collector": "sources/carbon-intensity-london/collect.mjs"
++}
+diff --git a/data/api/sources/ea-thames-tide.json b/data/api/sources/ea-thames-tide.json
+new file mode 100644
+index 0000000..cb856cd
+--- /dev/null
++++ b/data/api/sources/ea-thames-tide.json
+@@ -0,0 +1,31 @@
++{
++ "license": {
++  "name": "CC BY 4.0",
++  "url": "https://creativecommons.org/licenses/by/4.0/",
++  "holder": "PrompTugal.news",
++  "note": "What PrompTugal.news makes: this file's structure, records and derived values.",
++  "commercial_use": "allowed",
++  "commercial_note": "With credit to PrompTugal.news; values taken from a source keep that source's licence."
++ },
++ "id": "ea-thames-tide",
++ "name": "The tidal Thames through London (Environment Agency)",
++ "kind": "open-data API",
++ "url": "https://environment.data.gov.uk/flood-monitoring/doc/reference",
++ "owner": "Environment Agency, real-time flood-monitoring API",
++ "places": [
++  "london"
++ ],
++ "country": "GB",
++ "gives": [
++  "Water level at seven Environment Agency gauges on the tidal Thames from Richmond to Erith, every 15 minutes over the last 24 hours."
++ ],
++ "status": "read",
++ "how": "sources/ea-thames-tide/collect.mjs reads https://environment.data.gov.uk/flood-monitoring/doc/reference (daily; the source's own cadence: daily)",
++ "terms": {
++  "summary": "Open Government Licence v3.0, no registration; acknowledge with: \"this uses Environment Agency flood and river level data from the real-time data API (Beta)\". Not for safety-critical use.",
++  "page": "https://environment.data.gov.uk/flood-monitoring/doc/reference",
++  "read_at": "2026-11-21"
++ },
++ "on_this_site": "https://data.promptugal.news/sources/ea-thames-tide/",
++ "collector": "sources/ea-thames-tide/collect.mjs"
++}
 diff --git a/data/api/sources/gaps.json b/data/api/sources/gaps.json
 index a70b5f7..d90d472 100644
 --- a/data/api/sources/gaps.json
@@ -31801,6 +31885,117 @@ index 00719a2..4bb92dc 100644
    {
     "id": "youtube-replays",
     "name": "Web Summit 2026 replays on YouTube",
+diff --git a/data/api/sources/tfl-bikepoint.json b/data/api/sources/tfl-bikepoint.json
+new file mode 100644
+index 0000000..d2b405c
+--- /dev/null
++++ b/data/api/sources/tfl-bikepoint.json
+@@ -0,0 +1,31 @@
++{
++ "license": {
++  "name": "CC BY 4.0",
++  "url": "https://creativecommons.org/licenses/by/4.0/",
++  "holder": "PrompTugal.news",
++  "note": "What PrompTugal.news makes: this file's structure, records and derived values.",
++  "commercial_use": "allowed",
++  "commercial_note": "With credit to PrompTugal.news; values taken from a source keep that source's licence."
++ },
++ "id": "tfl-bikepoint",
++ "name": "London cycle hire docks (TfL Santander Cycles)",
++ "kind": "open-data API",
++ "url": "https://api.tfl.gov.uk/",
++ "owner": "Transport for London (TfL), Unified API",
++ "places": [
++  "london"
++ ],
++ "country": "GB",
++ "gives": [
++  "Every Santander Cycles dock in London with its bikes, e-bikes and empty docks, and London's totals."
++ ],
++ "status": "read",
++ "how": "sources/tfl-bikepoint/collect.mjs reads https://api.tfl.gov.uk/ (daily; the source's own cadence: daily)",
++ "terms": {
++  "summary": "TfL's Transport Data Service terms (based on the Open Government Licence v2.0 with TfL amendments): free to copy, publish, distribute, transmit and adapt the information and to exploit it commercially and non-commercially; credit \"Powered by TfL Open Data\"; at most 500 calls a minute per feed; no implied endorsement.",
++  "page": "https://tfl.gov.uk/corporate/terms-and-conditions/transport-data-service",
++  "read_at": "2026-11-18"
++ },
++ "on_this_site": "https://data.promptugal.news/sources/tfl-bikepoint/",
++ "collector": "sources/tfl-bikepoint/collect.mjs"
++}
+diff --git a/data/api/sources/tfl-road-disruptions.json b/data/api/sources/tfl-road-disruptions.json
+new file mode 100644
+index 0000000..df2528a
+--- /dev/null
++++ b/data/api/sources/tfl-road-disruptions.json
+@@ -0,0 +1,31 @@
++{
++ "license": {
++  "name": "CC BY 4.0",
++  "url": "https://creativecommons.org/licenses/by/4.0/",
++  "holder": "PrompTugal.news",
++  "note": "What PrompTugal.news makes: this file's structure, records and derived values.",
++  "commercial_use": "allowed",
++  "commercial_note": "With credit to PrompTugal.news; values taken from a source keep that source's licence."
++ },
++ "id": "tfl-road-disruptions",
++ "name": "London road disruptions (TfL)",
++ "kind": "open-data API",
++ "url": "https://api.tfl.gov.uk/",
++ "owner": "Transport for London (TfL), Unified API",
++ "places": [
++  "london"
++ ],
++ "country": "GB",
++ "gives": [
++  "Works, incidents and closures on London's roads as TfL lists them: severity, category, place, TfL's description and the period."
++ ],
++ "status": "read",
++ "how": "sources/tfl-road-disruptions/collect.mjs reads https://api.tfl.gov.uk/ (daily; the source's own cadence: daily)",
++ "terms": {
++  "summary": "TfL's Transport Data Service terms (based on the Open Government Licence v2.0 with TfL amendments): free to copy, publish, distribute, transmit and adapt the information and to exploit it commercially and non-commercially; credit \"Powered by TfL Open Data\"; at most 500 calls a minute per feed; no implied endorsement.",
++  "page": "https://tfl.gov.uk/corporate/terms-and-conditions/transport-data-service",
++  "read_at": "2026-11-18"
++ },
++ "on_this_site": "https://data.promptugal.news/sources/tfl-road-disruptions/",
++ "collector": "sources/tfl-road-disruptions/collect.mjs"
++}
+diff --git a/data/api/sources/tfl-status.json b/data/api/sources/tfl-status.json
+new file mode 100644
+index 0000000..c8195d2
+--- /dev/null
++++ b/data/api/sources/tfl-status.json
+@@ -0,0 +1,31 @@
++{
++ "license": {
++  "name": "CC BY 4.0",
++  "url": "https://creativecommons.org/licenses/by/4.0/",
++  "holder": "PrompTugal.news",
++  "note": "What PrompTugal.news makes: this file's structure, records and derived values.",
++  "commercial_use": "allowed",
++  "commercial_note": "With credit to PrompTugal.news; values taken from a source keep that source's licence."
++ },
++ "id": "tfl-status",
++ "name": "London line status (TfL)",
++ "kind": "open-data API",
++ "url": "https://api.tfl.gov.uk/",
++ "owner": "Transport for London (TfL), Unified API",
++ "places": [
++  "london"
++ ],
++ "country": "GB",
++ "gives": [
++  "Each London Tube, Overground, Elizabeth line, DLR and tram line and its status as Transport for London publishes it (good service, delays, closures), with TfL's reason."
++ ],
++ "status": "read",
++ "how": "sources/tfl-status/collect.mjs reads https://api.tfl.gov.uk/ (daily; the source's own cadence: daily)",
++ "terms": {
++  "summary": "TfL's Transport Data Service terms (based on the Open Government Licence v2.0 with TfL amendments): free to copy, publish, distribute, transmit and adapt the information and to exploit it commercially and non-commercially; credit \"Powered by TfL Open Data\"; at most 500 calls a minute per feed; no implied endorsement.",
++  "page": "https://tfl.gov.uk/corporate/terms-and-conditions/transport-data-service",
++  "read_at": "2026-11-18"
++ },
++ "on_this_site": "https://data.promptugal.news/sources/tfl-status/",
++ "collector": "sources/tfl-status/collect.mjs"
++}
 diff --git a/data/api/sync.json b/data/api/sync.json
 index 90baa63..b8f752c 100644
 --- a/data/api/sync.json

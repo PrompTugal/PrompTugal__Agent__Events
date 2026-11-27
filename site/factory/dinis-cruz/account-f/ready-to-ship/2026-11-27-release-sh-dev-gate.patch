@@ -1,4 +1,4 @@
-From a1bc1cba0007b485ed67c5f62ceb6280b11dbc83 Mon Sep 17 00:00:00 2001
+From aa3a89f2d88aab6c5bf3eb9f57ea310f20d59224 Mon Sep 17 00:00:00 2001
 From: "cl-6.events@PrompTugal.dinis" <cl-6.events@PrompTugal.dinis>
 Date: Fri, 27 Nov 2026 02:43:13 +0000
 Subject: [PATCH] cl-6.events@PrompTugal.dinis: release.sh pushes to
@@ -12,14 +12,14 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
  1 file changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/scripts/release.sh b/scripts/release.sh
-index 4fa31b9..6d849f6 100755
+index 4fa31b9..4336f2d 100755
 --- a/scripts/release.sh
 +++ b/scripts/release.sh
 @@ -59,9 +59,16 @@ trusted_check() {
    rm -rf "$d"; return $rc
  }
  trusted_check
-+AGENT_NAME=${AGENT_NAME:-cl-6.events}; WORK="work/$AGENT_NAME"
++AGENT_NAME=cl-6.events; WORK="work/cl-6.events"   # hard-coded, never from the environment (cl-6.security, 27 Nov 2026)
  for i in 1 2 3 4 5; do
    git fetch -q origin dev
 -  git rebase -q origin/dev
@@ -47,7 +47,7 @@ index 4fa31b9..6d849f6 100755
 +  for t in $(seq 1 14); do
 +    sleep 90
 +    [ "$(git ls-remote origin refs/heads/dev | cut -f1)" = "$SHA" ] && { echo "released ${SHA:0:7} to dev through $WORK"; exit 0; }
-+    if git ls-remote --tags origin "refs/tags/gate/$AGENT_NAME/*" | grep -q "${SHA:0:12}-fail"; then echo "the gate refused ${SHA:0:12}: stopping and reporting" >&2; exit 1; fi
++    if [ -n "$(git ls-remote --tags origin "refs/tags/gate/cl-6.events/${SHA:0:12}-fail")" ]; then echo "the gate refused ${SHA:0:12}: stopping and reporting" >&2; exit 1; fi
 +    [ "$(git ls-remote origin refs/heads/dev | cut -f1)" != "$BASE" ] && { echo "dev moved: rebasing and pushing again"; continue 2; }
 +  done
 +  echo "no result for ${SHA:0:12} after about 20 minutes: stopping" >&2; exit 1

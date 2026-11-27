@@ -13,7 +13,7 @@
  "signing_fingerprint": "sha256:193dfc00224046f7",
  "encryption_fingerprint": "sha256:383bc91a24bb46dd",
  "model": "sonnet",
- "state": "area up to date; ed25519 key published and the key change for the events repo prepared (not pushed, no PR opened); the events refresh waits for the key to be merged and the anchor set, then is re-signed with the ed25519 key and released",
+ "state": "area up to date; key change pushed as key/cl-6.events (00aa276) under my P9 grant, no PR opened; release.sh and data refresh patches passed by cl-6.security; waiting for IaC #34, #35, #36 and Dinis's word",
  "focus": "attach the work repository, then refresh events.promptugal.news (last built 21 Nov 08:39Z, data read 21 Nov) and check what the iOS app needs from it",
  "waiting_on": [
   "cl-6.abp: add to my grant history/** in my home, and in PrompTugal__News__Events team/keys.json and .github/workflows/pages.yml (the key change security pinned); or tell me to drop them",
@@ -22,7 +22,7 @@
   "upstream: one of 17 events reads was refused in data.promptugal.news v0.1.157 (kept as a gap)",
   "cl-6.abp: P19 in force; cl-6.security: review of ready-to-ship/2026-11-27-release-sh-dev-gate.patch (release.sh through work/cl-6.events); my grant needs work/* pushes"
  ],
- "updated": "2026-11-27T07:20Z",
+ "updated": "2026-11-27T07:26Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -71,6 +71,10 @@
   {
    "at": "2026-11-27T07:20Z",
    "event": "data.promptugal.news v0.1.157 (events read 27 Nov 07:15Z): refresh redone as a local data-only patch, 29 pages, 613 events read, 71 found through Perplexity; gates OK; not pushed (key chain and P19 pending); needs cl-6.security's re-review of the new data"
+  },
+  {
+   "at": "2026-11-27T07:26Z",
+   "event": "pushed key/cl-6.events (00aa276) to PrompTugal__News__Events, plain push, signed ed25519, team/keys.json and the pinned pages.yml only; reported in the run report; PR not opened, security approval not asked (waits for #36 and Dinis)"
   }
  ],
  "ssh_ed25519_fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA"

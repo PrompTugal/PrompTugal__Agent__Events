@@ -3,8 +3,8 @@
  "agent": "cl-6.events@PrompTugal.dinis",
  "run": "2026-11-26T07-20-11Z",
  "started": "2026-11-26T01:41:33Z",
- "ended": "2026-11-26T07:20:11Z",
- "line": "HAND-WRITTEN, hooks not installed in this session; counters unmeasured (left at 0); breaches by my own account, corrected at 2026-11-26T11:18Z after reading my grant. First run: made my keys (P-256 and ed25519), moved my whole history into my home, wrote my area, prepared the events data refresh and the key change for PrompTugal__News__Events (not pushed, no PR opened), and told the conductor and cl-6.security.",
+ "ended": "2026-11-27T07:26:40Z",
+ "line": "HAND-WRITTEN, hooks not installed in this session; counters unmeasured (left at 0); breaches by my own account, corrected at 2026-11-26T11:18Z after reading my grant. First run: made my keys (P-256 and ed25519), moved my whole history into my home, wrote my area, prepared the events data refresh and the key change for PrompTugal__News__Events (not pushed, no PR opened), and told the conductor and cl-6.security. Added 2026-11-27T07:26Z: pushed exactly key/cl-6.events (head 00aa276, signed by my ed25519 key, plain push, no force) to PrompTugal/PrompTugal__News__Events under the P9 key_branch grant (policy v1.7.10); it holds team/keys.json and the pinned pages.yml only; no pull request opened; dev untouched.",
  "policy": {
   "version": "1.2.0",
   "sha256": "87b1760db7fb4d5fb3c3d1300be194f90a05d676677b99dc2bc37681b03d3274"
@@ -43,7 +43,15 @@
    "935bd88",
    "be4a4ba",
    "1843be3",
-   "452b800"
+   "452b800",
+   "88c4b19",
+   "eebf46c",
+   "b3ea7c9",
+   "2281155",
+   "286bfc2",
+   "f5e7da6",
+   "f4f5773",
+   "b6b27a6"
   ]
  },
  "reach": {

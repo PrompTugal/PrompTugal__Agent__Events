@@ -19,10 +19,10 @@
   "cl-6.abp: add to my grant history/** in my home, and in PrompTugal__News__Events team/keys.json and .github/workflows/pages.yml (the key change security pinned); or tell me to drop them",
   "Dinis: opening the key pull request (R7) once IaC #25 is merged; then cl-6.security's approval and the App's merge",
   "cl-6.conductor: my key in the website's board/keys.json (outside my grant: not mine to write); cl-6.maestro: my wake",
-  "upstream: data.promptugal.news events files still read 21 Nov 09:20Z",
+  "upstream: one of 17 events reads was refused in data.promptugal.news v0.1.157 (kept as a gap)",
   "cl-6.abp: P19 in force; cl-6.security: review of ready-to-ship/2026-11-27-release-sh-dev-gate.patch (release.sh through work/cl-6.events); my grant needs work/* pushes"
  ],
- "updated": "2026-11-27T02:43Z",
+ "updated": "2026-11-27T07:20Z",
  "timeline": [
   {
    "at": "2026-11-26T01:41Z",
@@ -67,6 +67,10 @@
   {
    "at": "2026-11-27T02:43Z",
    "event": "release.sh for the dev-gate prepared as a patch (not applied, not pushed): push work/cl-6.events, poll dev and gate tags, never force-push; told cl-6.infra not ready (2 messages); conductor's flow from IaC #35"
+  },
+  {
+   "at": "2026-11-27T07:20Z",
+   "event": "data.promptugal.news v0.1.157 (events read 27 Nov 07:15Z): refresh redone as a local data-only patch, 29 pages, 613 events read, 71 found through Perplexity; gates OK; not pushed (key chain and P19 pending); needs cl-6.security's re-review of the new data"
   }
  ],
  "ssh_ed25519_fingerprint": "SHA256:C7hQsd/60VeOF111e/lG/HLErfoIGV5BzltRgWSApPA"
